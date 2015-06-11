@@ -3,13 +3,13 @@ from Flasktest.database import db_session
 from Flasktest.models import Entry
 from flask import Flask, request, session, g, redirect, url_for, \
 	abort, render_template, flash
-
+import socket
 
 
 @app.route('/')
 def show_entries():
   entries = Entry.query.all()
-  return render_template('show_entries.html', entries=entries)
+  return render_template('show_entries.html', entries=entries, hostname=socket.gethostname())
 
 @app.route('/add', methods=['POST'])
 def add_entry():
