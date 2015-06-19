@@ -10,14 +10,14 @@ dbport = os.environ.get('PG_PORT')
 db = os.environ.get('PG_DATABASE')
 
 uri = 'postgres://'+username+':'+password+'@'+dbhost+':'+dbport+'/'+db
-engine = create_engine(uri, convert_unicode=True,echo=True)
+engine = create_engine(uri, convert_unicode=True, echo=True)
 db_session = scoped_session(sessionmaker(autocommit=False,
-					 autoflush=False,
-					 bind=engine))
+                                         autoflush=False,
+                                         bind=engine))
 Base = declarative_base()
 Base.query = db_session.query_property()
 
-def init_db():
-  import Flasktest.models
-  Base.metadata.create_all(bind=engine)
 
+def init_db():
+    import Flasktest.models
+    Base.metadata.create_all(bind=engine)

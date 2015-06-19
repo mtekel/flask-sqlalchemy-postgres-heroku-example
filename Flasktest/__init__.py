@@ -2,8 +2,10 @@ from __future__ import with_statement
 from contextlib import closing
 from Flasktest.database import db_session
 from flask import Flask
+from flask.ext.stats import Stats
+import os
 
-#configuration
+# configuration
 DATABASE = '/tmp/flasktest.db'
 DEBUG = True
 SECRET_KEY = 'development key'
@@ -16,7 +18,20 @@ app.config.from_envvar('FLASKR_SETTINGS', silent=True)
 
 import Flasktest.views
 
+
+# Flask stats configuration
+# STATS_HOSTNAME
+app.config['STATS_HOSTNAME'] = os.environ.get('STATS_HOSTNAME', "")
+# STATS_PORT
+app.config['STATS_PORT'] = os.environ.get('STATS_PORT', "")
+# STATS_BASE_KEY
+app.config['STATS_BASE_KEY'] = os.environ.get('STATS_BASE_KEY', "")
+
+# Initialise flask-metrics, only if connection setup
+if app.config['STATS_HOSTNAME'] != "":
+	stats = Stats().init_app(app)
+
+
 @app.teardown_request
 def teardown_request(exception):
-  db_session.remove()
-
+    db_session.remove()
