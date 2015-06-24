@@ -13,6 +13,11 @@ def show_entries():
     return render_template('show_entries.html', entries=entries, hostname=socket.gethostname())
 
 
+@app.route('/healthcheck')
+def healthcheck():
+    return "It's all cool\n", 200
+
+
 @app.route('/add', methods=['POST'])
 def add_entry():
     if not session.get('logged_in'):
