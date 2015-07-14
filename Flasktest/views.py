@@ -15,7 +15,7 @@ def show_entries():
 
 @app.route('/healthcheck')
 def healthcheck():
-    return "It's all cool\n", 200
+    return "app is running\n", 200
 
 
 @app.route('/add', methods=['POST'])
