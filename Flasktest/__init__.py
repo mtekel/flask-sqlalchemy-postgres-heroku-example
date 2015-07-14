@@ -4,6 +4,7 @@ from Flasktest.database import db_session
 from flask import Flask
 from flask.ext.stats import Stats
 import os
+import logging
 
 # configuration
 DATABASE = '/tmp/flasktest.db'
@@ -15,6 +16,9 @@ PASSWORD = 'default'
 app = Flask(__name__)
 app.config.from_object(__name__)
 app.config.from_envvar('FLASKR_SETTINGS', silent=True)
+
+app.logger.addHandler(logging.StreamHandler())
+app.logger.setLevel(logging.INFO)
 
 import Flasktest.views
 

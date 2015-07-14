@@ -1,6 +1,8 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.exc import OperationalError
+from flask import current_app as app
 import os
 
 username = os.environ.get('PG_USER', 'demo')
@@ -20,4 +22,7 @@ Base.query = db_session.query_property()
 
 def init_db():
     import Flasktest.models
-    Base.metadata.create_all(bind=engine)
+    try:
+        Base.metadata.create_all(bind=engine)
+    except OperationalError as e:
+        app.logger.error(e)
