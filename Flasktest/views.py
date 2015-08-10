@@ -9,7 +9,7 @@ import time
 
 @app.route('/')
 def show_entries():
-    entries = Entry.query.all()
+    entries = Entry.query.all()[:20]
     return render_template('show_entries.html', entries=entries, hostname=socket.gethostname())
 
 
