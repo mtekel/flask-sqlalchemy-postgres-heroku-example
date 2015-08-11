@@ -1,6 +1,7 @@
 from __future__ import with_statement
 from contextlib import closing
 from Flasktest.database import db_session
+from Flasktest.database import init_db
 from flask import Flask
 from flask.ext.stats import Stats
 import os
@@ -33,7 +34,12 @@ app.config['STATS_BASE_KEY'] = os.environ.get('STATS_BASE_KEY', "")
 
 # Initialise flask-metrics, only if connection setup
 if app.config['STATS_HOSTNAME'] != "":
-	stats = Stats().init_app(app)
+    stats = Stats().init_app(app)
+
+
+@app.before_first_request
+def init_stuff():
+    init_db()
 
 
 @app.teardown_request
