@@ -4,14 +4,20 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.exc import OperationalError
 from flask import current_app as app
 import os
+import json
 
-username = os.environ.get('PG_USER', 'demo')
-password = os.environ.get('PG_PASSWORD', 'demo')
-dbhost = os.environ.get('PG_HOST', 'localhost')
-dbport = os.environ.get('PG_PORT', '5432')
-db = os.environ.get('PG_DATABASE', 'demo')
+cf_services_data = os.environ.get('VCAP_SERVICES')
+if cf_services_data:
+    cf_services = json.loads(cf_services_data)
+    uri = cf_services['PostgreSQL'][0]['credentials']['uri']
+else:
+    username = os.environ.get('PG_USER', 'demo')
+    password = os.environ.get('PG_PASSWORD', 'demo')
+    dbhost = os.environ.get('PG_HOST', 'localhost')
+    dbport = os.environ.get('PG_PORT', '5432')
+    db = os.environ.get('PG_DATABASE', 'demo')
+    uri = 'postgres://'+username+':'+password+'@'+dbhost+':'+dbport+'/'+db
 
-uri = 'postgres://'+username+':'+password+'@'+dbhost+':'+dbport+'/'+db
 engine = create_engine(uri, convert_unicode=True, echo=True)
 db_session = scoped_session(sessionmaker(autocommit=False,
                                          autoflush=False,
